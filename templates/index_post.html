@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Upload & Convert Files{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f4f7fb;
+        font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 40px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .form-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 25px 30px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #333;
+        font-size: 20px;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0 16px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 15px;
+        transition: background-color 0.2s ease;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="container">
+    <div class="form-card">
+        <h2>Login</h2>
+        <form method="POST" action="{{ url_for('index') }}">
+            <input type="text" name="username" placeholder="Username"><br>
+            <input type="password" name="password" placeholder="Password"><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <div class="form-card">
+        <h2>Upload File</h2>
+        <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+            <input type="file" name="file"
+                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                           application/vnd.ms-excel,
+                           text/plain,
+                           application/pdf"
+                   required="required"><br>
+            <input type="submit" value="Upload File">
+        </form>
+    </div>
+
+    <div class="form-card">
+        <h2>Convert to CSV</h2>
+        <form method="POST" action="{{ url_for('convert_csv') }}" enctype="multipart/form-data">
+            <input type="file" name="file"
+                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                           application/vnd.ms-excel"
+                   required="required"><br>
+            <input type="submit" value="Convert To CSV">
+        </form>
+    </div>
+
+    <div class="form-card">
+        <h2>Convert & Download CSV</h2>
+        <form method="POST" action="{{ url_for('convert_download_csv') }}" enctype="multipart/form-data">
+            <input type="file" name="file"
+                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                           application/vnd.ms-excel"
+                   required="required"><br>
+            <input type="submit" value="Convert & Download">
+        </form>
+    </div>
+
+    <div class="form-card">
+        <h2>Javascript JSON Request</h2>
+        <button id="post_button">Send Post Request</button>
+
+        <script type="text/Javascript">
+            const postButton = document.getElementById('post_button')
+            const jsonData = {name: 'Mike', greeting: 'Hello'}
+
+            postButton.addEventListener('click', () => {
+                fetch('{{ url_for('handle_post') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                .then(response => response.json())
+                .then(data => console.log('Success: ', data))
+                .catch((error) => {
+                    console.log('Error:', error)
+                })
+                .then(response => response.json())
+                .then(data => console.log('Success: ', data))
+                .catch((error) => {
+                    console.log('Error:', error)
+                })
+            })
+        </script>        
+    </div>
+</div>
+{% endblock %}
